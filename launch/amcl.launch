@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Map server -->
+  <arg name="map_file" default="$(find udacity_bot)/maps/jackal_race.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  
+  <!--                       Localisation                               -->
+ <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <remap from="scan" to="udacity_bot/laser/scan"/>
+
+
+
+    <!--                   Overall filter Parameters                    -->
+    
+    <!-- Number of particles allowed-->
+    <!-- Default 100 -->
+    <param name="min_particles" value="50"/>
+    <!-- Default 5000 -->
+    <param name="max_particles" value="700"/>
+
+    <!-- Translational movement required before performing a filter update -->
+    <!-- Default 0.2m -->
+    <param name="update_min_d" value="0.05"/>
+    
+    <!-- Rotational movement required before performing a filter update -->
+    <!-- Default = pi/6 rads = 0.5236 rads-->
+    <param name="update_min_a" value="0.1"/>
+
+    <!-- Time difference to post-date the published transform-->
+    <!-- Default = 0.2s-->
+    <param name="transform_tolerance" value="0.2"/>
+
+    <!-- Initial pose & orient -->
+    <!-- default 0.0 metres -->
+    <param name="initial_pose_x" value="0.0"/>
+    <!-- default 0.0 metres -->
+    <param name="initial_pose_y" value="0.0"/>
+    <!-- default 0.0 radians -->
+    <param name="initial_pose_a" value="0.0"/>
+
+
+    <!--                     Laser Model Parameters                     -->
+
+    <!-- The range within laser scan should be considered; units n/a -->
+    <!-- Default values -1.0 -->
+    <param name="laser_min_range" value="-1.0"/>
+    <param name="laser_max_range" value="-1.0"/>
+
+    <!-- As using likelihood_field_prob these two should add to 1--> 
+    <!-- default value 0.95 -->
+    <param name="laser_z_hit" value="0.95"/>
+    <!-- default value 0.05 -->
+    <param name="laser_z_rand" value="0.05"/>
+    
+    <!-- Standard deviation for Gauss model (z_hit) -->
+    <!-- Default value 0.2m -->
+    <param name="laser_sigma_hit" value="0.2"/>
+   
+    <param name="laser_model_type" value="likelihood_field_prob"/>
+    <!--param name="laser_model_type" value="likelihood_field"/-->
+    <!--param name="laser_model_type" value="beam"/-->
+   
+    <!-- Max dist to do obstacle inflation -->
+    <!-- Default value 2.0m -->
+    <param name="laser_likelihood_max_dist" value="2.0"/>
+    
+
+    <!--                     Odom Model Parameters                      -->
+
+    <param name="odom_model_type" value="diff-corrected"/>
+    <param name="odom_frame_id" value="odom"/>
+    <param name="base_frame_id" value="robot_footprint"/>
+    <param name="global_frame_id" value="map"/>
+
+    <!-- Specifies the expected noise in the odometry -->
+    <!-- defaults values are 0.2 -->
+    <param name="odom_alpha1" value="0.2"/>
+    <param name="odom_alpha2" value="0.2"/>
+    <param name="odom_alpha3" value="0.2"/>
+    <param name="odom_alpha4" value="0.2"/>
+
+
+  </node>
+
+<!-- Move base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find udacity_bot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find udacity_bot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find udacity_bot)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find udacity_bot)/config/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find udacity_bot)/config/base_local_planner_params.yaml" command="load" />
+
+    <remap from="cmd_vel" to="cmd_vel"/>
+    <remap from="odom" to="odom"/>
+    <remap from="scan" to="udacity_bot/laser/scan"/>
+
+    <param name="base_global_planner" type="string" value="navfn/NavfnROS" />
+    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+
+  </node>
+
+
+</launch>
