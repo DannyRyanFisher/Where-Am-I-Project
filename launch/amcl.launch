@@ -7,7 +7,7 @@
 
   
   <!--                       Localisation                               -->
- <node pkg="amcl" type="amcl" name="amcl" output="screen">
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
     <remap from="scan" to="udacity_bot/laser/scan"/>
 
 
@@ -46,7 +46,7 @@
     <!-- The range within laser scan should be considered; units n/a -->
     <!-- Default values -1.0 -->
     <param name="laser_min_range" value="-1.0"/>
-    <param name="laser_max_range" value="-1.0"/>
+    <param name="laser_max_range" value="5.0"/>
 
     <!-- As using likelihood_field_prob these two should add to 1--> 
     <!-- default value 0.95 -->
@@ -54,6 +54,10 @@
     <!-- default value 0.05 -->
     <param name="laser_z_rand" value="0.05"/>
     
+
+    <!-- Default value = 30-->
+    <param name="laser_max_beams" value="50"/>
+
     <!-- Standard deviation for Gauss model (z_hit) -->
     <!-- Default value 0.2m -->
     <param name="laser_sigma_hit" value="0.2"/>
@@ -76,10 +80,10 @@
 
     <!-- Specifies the expected noise in the odometry -->
     <!-- defaults values are 0.2 -->
-    <param name="odom_alpha1" value="0.2"/>
-    <param name="odom_alpha2" value="0.2"/>
-    <param name="odom_alpha3" value="0.2"/>
-    <param name="odom_alpha4" value="0.2"/>
+    <param name="odom_alpha1" value="0.02"/>
+    <param name="odom_alpha2" value="0.02"/>
+    <param name="odom_alpha3" value="0.02"/>
+    <param name="odom_alpha4" value="0.02"/>
 
 
   </node>
