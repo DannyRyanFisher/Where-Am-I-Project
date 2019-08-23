@@ -98,7 +98,7 @@
 
     <remap from="cmd_vel" to="cmd_vel"/>
     <remap from="odom" to="odom"/>
-    <remap from="scan" to="udacity_bot/laser/scan"/>
+    <remap from="scan" to="my_robot/laser/scan"/>
 
     <param name="base_global_planner" type="string" value="navfn/NavfnROS" />
     <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
